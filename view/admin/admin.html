@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+
+<style>
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+    }
+    input, textarea, button, select {font-family: inherit}
+
+    /* ----- Generic Styles - Starts here*/
+    .edit-button{
+        background-color: #4CAF50;
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        cursor: pointer;
+        /* width: 100%; */
+        opacity: 0.9;
+    }
+    /* ----- Generic Styles - Ends here*/
+
+
+    /* ----- Collapsible Div Styles - Starts here*/
+    .collapsible {
+      background-color: #777;
+      color: white;
+      cursor: pointer;
+      padding: 18px;
+      width: 100%;
+      border: none;
+      text-align: left;
+      outline: none;
+      font-size: 15px;
+    }
+
+    .active, .collapsible:hover {
+      background-color: #555;
+    }
+
+    .collapsible:after {
+      content: '\002B';
+      color: white;
+      font-weight: bold;
+      float: right;
+      margin-left: 5px;
+    }
+
+    .active:after {
+      content: "\2212";
+    }
+
+    .content {
+      padding: 0 18px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.2s ease-out;
+      background-color: #f1f1f1;
+    }
+  /* ----- Collapsible Div Styles - Ends here*/
+
+
+  /**----- Add/Update Question Modal Box Styles - Starts here-----*/ 
+        /* Full-width input fields */
+        input[type=text], input[type=password] {
+        width: 95%;
+        padding: 15px;
+        margin: 5px 0 22px 0;
+        display: inline-block;
+        border: none;
+        background: #f1f1f1;
+        }
+
+        /* Add a background color when the inputs get focus */
+        input[type=text]:focus, input[type=password]:focus {
+        background-color: #ddd;
+        outline: none;
+        }
+
+        /* Set a style for all buttons */
+        button {
+        background-color: #4CAF50;
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        cursor: pointer;
+        /* width: 100%; */
+        opacity: 0.9;
+        }
+
+        button:hover {
+        opacity:1;
+        }
+         /* Extra styles for the heading Update Question */
+         .heading{
+           background-color: #4CAF50;
+         }
+
+        /* Extra styles for the cancel button */
+        .cancelbtn {
+        padding: 14px 20px;
+        background-color: #f44336;
+        }
+
+        /* Float cancel and signup buttons and add an equal width */
+        .cancelbtn, .signupbtn {
+        float: left;
+        width: 50%;
+        }
+
+        /* Add padding to container elements */
+        .container {
+        padding: 16px;
+        }
+
+        /* The Modal (background) */
+        .question-modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: #474e5d;
+        padding-top: 50px;
+        }
+
+        /* Modal Content/Box */
+        .question-modal-content {
+        background-color: #fefefe;
+        margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
+        border: 1px solid #888;
+        width: 80%; /* Could be more or less, depending on screen size */
+        }
+
+        /* Style the horizontal ruler */
+        hr {
+        border: 1px solid #f1f1f1;
+        margin-bottom: 25px;
+        }
+        
+        /* The Close Button (x) */
+        .close-button {
+        position: absolute;
+        right: 35px;
+        top: 15px;
+        font-size: 40px;
+        font-weight: bold;
+        color: #f1f1f1;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+        color: #f44336;
+        cursor: pointer;
+        }
+
+        /* Clear floats */
+        .clearfix::after {
+        content: "";
+        clear: both;
+        display: table;
+        }
+
+        /* Change styles for cancel button and signup button on extra small screens */
+        @media screen and (max-width: 300px) {
+        .cancelbtn, .signupbtn {
+            width: 100%;
+        }
+        }
+  /**----- Add/Update Question Modal Box Styles - Ends here-----*/ 
+       
+        
+
+
+</style>
+
+</head>
+
+<body onload="searchQuestions()">
+
+  <div id="question-set"></div>
+
+  <!-- The Add Question Modal : Starts here -->
+  <div id="add-que-form" class="question-modal">
+
+    <span onclick="document.getElementById('add-que-form').style.display='none'" class="close-button" title="Close">&times;</span>
+
+    <form class="question-modal-content">
+        <div class="container">
+            <h1>Add New Question</h1>
+            <p>Please fill in this form to add new question.</p>
+            <hr>
+
+            <label for="language"><b>Language</b></label>
+            <!-- <input type="text" placeholder="Select Language" name="language" required> -->            
+            <select name="language" required >
+              <option value="HTML">HTML</option>
+              <option value="CSS">CSS</option>
+              <option value="JS">JavaScript</option>
+              <option value="JAVA">Java</option>
+              <option value="PY">Python</option>
+            </select>
+
+            <label for="level"><b>Difficulty Level</b></label>
+            <!-- <input type="text" placeholder="Select Difficulty Level" name="level" required> -->
+            <select name="level" required>
+              <option value="BGN">Beginner</option>
+              <option value="INT">Intermediate</option>
+              <option value="EXP">Expert</option>
+            </select>
+            
+            <hr>
+
+            <label for="question-number"><b>Question Number</b></label>
+            <input type="text" placeholder="Enter Question No." name="question-num" required>
+
+
+            <label for="question"><b>Question</b></label>
+            <input type="text" placeholder="Enter Question" name="question" required>
+
+
+            <label for="options"><b>Options</b></label>
+            <input type="text" placeholder="Enter Option 1" name="opt1" required>
+            <input type="text" placeholder="Enter Option 2" name="opt2" required> 
+            <input type="text" placeholder="Enter Option 3" name="opt3" required>
+            <input type="text" placeholder="Enter Option 4" name="opt4" required>
+
+            <label for="correct-index"><b>Correct Option Index</b></label>
+            <input type="text" placeholder="Enter Index of Correct Option" name="correct-index" required>
+
+            <div class="clearfix">
+                <button type="button" onclick="document.getElementById('add-que-form').style.display='none'" class="cancelbtn">Cancel</button>  
+                <button type="button" class="signupbtn" onclick="addNewQuestion()">Save</button>
+            </div>
+        </div>
+    </form>
+    </div>
+
+  <!-- The Add Question Modal : Ends here-->
+
+  <!-- The Update Question Modal : Starts here -->
+  <div id="update-que-form" class="question-modal">
+
+    <span onclick="document.getElementById('update-que-form').style.display='none'" class="close-button" title="Close">&times;</span>
+
+    <form class="question-modal-content" >
+        <div class="container">
+            <h1 class="heading">Update Question</h1>
+            <hr>
+
+            <label for="id"><b>Question ID</b></label>
+            <input type="text" placeholder="Question ID" name="edit-id" required>        
+
+            <label for="language"><b>Language</b></label>
+            <!-- <input type="text" placeholder="Select Language" name="edit-lang" required> -->
+            <select name="edit-lang" required >
+              <option value="HTML">HTML</option>
+              <option value="CSS">CSS</option>
+              <option value="JS">JavaScript</option>
+              <option value="JAVA">Java</option>
+              <option value="PY">Python</option>
+            </select>
+            
+            <label for="level"><b>Difficulty Level</b></label>
+            <!-- <input type="text" placeholder="Select Difficulty Level" name="edit-level" required>  -->
+            <select name="edit-level" required>
+              <option value="BGN">Beginner</option>
+              <option value="INT">Intermediate</option>
+              <option value="EXP">Expert</option>
+            </select>
+
+            <label for="question-number"><b>Question Number</b></label>
+            <input type="text" placeholder="Enter Question No." name="edit-que-no" required>
+
+
+            <label for="question"><b>Question</b></label>
+            <input type="text" placeholder="Enter Question" name="edit-que" required>
+
+
+            <label for="options"><b>Options</b></label>
+            <input type="text" placeholder="Enter Option 1" name="edit-opt1" required>
+            <input type="text" placeholder="Enter Option 2" name="edit-opt2" required> 
+            <input type="text" placeholder="Enter Option 3" name="edit-opt3" required>
+            <input type="text" placeholder="Enter Option 4" name="edit-opt4" required>
+
+            <label for="correct-index"><b>Correct Option Index</b></label>
+            <input type="text" placeholder="Enter Index of Correct Option" name="edit-cor-idx" required>
+
+            <div class="clearfix">
+                <button type="button" onclick="document.getElementById('update-que-form').style.display='none'" class="cancelbtn">Cancel</button>  
+                <button type="button" class="signupbtn" onclick="updateQuizQuestion()">Update</button>
+            </div>
+        </div>
+    </form>
+  </div>
+
+  <!-- The Update Question Modal : Ends here-->
+
+
+  <script>
+
+    // global quiz data array
+    let globalQuizData = null;
+
+    /**---- function for adding click listeners ----**/
+    function addClickListener(){
+
+      // --- Section 1: add event listener for collapsible divs ---
+      var coll = document.getElementsByClassName("collapsible");
+
+      for (var i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function(e) {
+          this.classList.toggle("active");
+          var content = this.nextElementSibling;
+
+          if (content.style.maxHeight)
+            content.style.maxHeight = null;
+          else
+            content.style.maxHeight = content.scrollHeight + "px";          
+        });
+      }
+
+
+      // --- Section 2: add event listener for add question modal ---
+      // Get the question-modal
+      var add_que_modal = document.getElementById('add-que-form');
+
+      // When the user clicks anywhere outside of the question-modal, close it
+      window.onclick = function(event) {
+        if (event.target == add_que_modal) {
+            add_que_modal.style.display = "none";
+        }
+      }
+
+
+      // --- Section 3: add event listener for update question modal ---
+      // Get the update-que-modal
+      var update_que_modal = document.getElementById('update-que-form');
+
+      // When the user clicks anywhere outside of the update-que-modal, close it
+      window.onclick = function(event) {
+        if (event.target == update_que_modal) {
+          update_que_modal.style.display = "none";
+        }
+      }
+
+    }
+
+
+    /**----function for searching/getting questions---**/
+    function searchQuestions() {
+
+      let searchLang = "";
+      let searchLevel = "";
+
+      try {
+        searchLang = document.getElementById("search-language").value;
+        searchLevel = document.getElementById("search-level").value;
+      } catch (error) {
+      }
+
+      let conditions = {
+          language: (searchLang === undefined || searchLang == "") ? "HTML" : searchLang ,
+          difficulty_level: (searchLevel === undefined || searchLevel == "") ? "BGN" : searchLevel
+      };
+
+      fetch("/api/search-questions",{
+            method: 'POST', // or 'PUT'
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(conditions),
+        })
+        .then((resp) => resp.json())
+        .then((data) => {
+          //console.log("Quiz Data: " + JSON.stringify(data));
+          globalQuizData = [...data];
+          displayQuiz(data);
+        });
+    }
+
+
+    /**----function for displaying questions---**/
+    function displayQuiz(data) {
+      let output = `
+        <h2>Question List</h2>
+        <div>
+          <span>Language </span>
+            <select id="search-language" >
+              <option value="HTML">HTML</option>
+              <option value="CSS">CSS</option>
+              <option value="JS">JavaScript</option>
+              <option value="JAVA">Java</option>
+              <option value="PY">Python</option>
+            </select>
+
+          <span>Difficulty Level </span>
+          <select id="search-level">
+              <option value="BGN">Beginner</option>
+              <option value="INT">Intermediate</option>
+              <option value="EXP">Expert</option>
+            </select>
+
+          <button id="search-button" onClick="searchQuestions()">SEARCH</button>
+          <button id="add-button" onClick="openAddQuestionModal()">ADD NEW QUESTION</button>
+        </div>
+        `;
+
+      data.forEach(function (quiz) {
+        let id = quiz._id;
+        let que_num = quiz.question_No;
+        let que = quiz.question;
+        let options = quiz.options;
+       
+        output += `
+                <button class="collapsible">
+                    ${que}
+                </button>
+                
+                <div class="content">
+              `;
+
+        for (var i = 0; i < options.length; i++) 
+          output += `<p>${i+1}: ${options[i]}</p>`;
+
+        output += `
+                  <hr style="border: 1px solid white;">
+                  <p>Correct Option Index: ${quiz.correct_index}</p>
+
+                  <button class="edit-button" id=${id} onClick="openUpdateModal(this)">EDIT</button>
+                  <button id="delete-question-button" onclick="doThis()">DELETE</button>
+
+                </div>`
+      });
+
+      document.getElementById("question-set").innerHTML =  output;
+
+      // add click listener
+      addClickListener();
+    }
+
+
+    /**----- function for adding new question -----*/
+    function addNewQuestion() {
+
+        let lang = document.getElementsByName("language")[0].value;
+        let level = document.getElementsByName("level")[0].value;
+        let question_num = document.getElementsByName("question-num")[0].value;
+        
+        let question = document.getElementsByName("question")[0].value;
+        let opt1 = document.getElementsByName("opt1")[0].value;
+        let opt2 = document.getElementsByName("opt2")[0].value;
+        let opt3 = document.getElementsByName("opt3")[0].value;
+        let opt4 = document.getElementsByName("opt4")[0].value;
+        let correct_opt = document.getElementsByName("correct-index")[0].value;
+
+        const quiz =
+        {
+            "language": lang,
+            "difficulty_level": level,
+            "question_No": question_num,
+            "question": question,
+            "options": [opt1, opt2, opt3, opt4],
+            "correct_index": correct_opt
+        }
+
+        fetch(`/api/admin/add-question`, {
+            method: 'POST', // or 'PUT'
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(quiz),
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            //console.log('Success:', data);
+            globalQuizData = [...data];
+            displayQuiz(data);
+            document.getElementById('add-que-form').style.display='none';           
+        })
+        .catch((error) => {
+            console.error('Add New Error:', error);
+        });
+
+    }
+
+
+    /** ---- function to open add question modal ---- */
+    function openAddQuestionModal() {
+      document.getElementById('add-que-form').style.display='block';      
+    }
+
+
+    /** ---- function for updating quiz question ---- */
+    function updateQuizQuestion() {
+            let id = document.getElementsByName("edit-id")[0].value;
+            let lang = document.getElementsByName("edit-lang")[0].value;
+            let level = document.getElementsByName("edit-level")[0].value;
+            let question_num = document.getElementsByName("edit-que-no")[0].value;
+
+            let question = document.getElementsByName(`edit-que`)[0].value;
+            let opt1 = document.getElementsByName(`edit-opt1`)[0].value;
+            let opt2 = document.getElementsByName(`edit-opt2`)[0].value;
+            let opt3 = document.getElementsByName(`edit-opt3`)[0].value;
+            let opt4 = document.getElementsByName(`edit-opt4`)[0].value;
+            let correct_opt = document.getElementsByName(`edit-cor-idx`)[0].value;
+
+            let quiz_question = {
+                "_id":id,
+                "language": lang,
+                "difficulty_level": level,
+                "question_No": question_num,
+                "question": question,
+                "options": [opt1, opt2, opt3, opt4],
+                "correct_index": correct_opt
+            }
+
+            fetch(`/api/admin/update-question`, {
+                method: 'POST', // or 'PUT'
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(quiz_question),
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                //console.log(`Update Response: ${JSON.stringify(data)}`);
+              
+                globalQuizData = [...data];
+                displayQuiz(data);
+                document.getElementById('update-que-form').style.display='none';           
+            })
+            .catch((error) => {
+                console.error('Update Error:', error);
+            });
+
+        }
+
+
+    /**----- Function for opening update question Modal -----*/
+
+    async function openUpdateModal(editButton) {
+
+      console.log(`id: ${editButton.id}`);
+
+      let res_quiz = await globalQuizData.filter(quiz => quiz._id == editButton.id);
+
+      // set values in modal elements
+      document.getElementsByName(`edit-id`)[0].value = res_quiz[0]._id;
+      document.getElementsByName(`edit-lang`)[0].value = res_quiz[0].language;
+      document.getElementsByName(`edit-level`)[0].value = res_quiz[0].difficulty_level;
+      document.getElementsByName(`edit-que-no`)[0].value = res_quiz[0].question_No;
+
+      document.getElementsByName(`edit-que`)[0].value = res_quiz[0].question;
+      document.getElementsByName(`edit-opt1`)[0].value = res_quiz[0].options[0];
+      document.getElementsByName(`edit-opt2`)[0].value = res_quiz[0].options[1];
+      document.getElementsByName(`edit-opt3`)[0].value = res_quiz[0].options[2];
+      document.getElementsByName(`edit-opt4`)[0].value = res_quiz[0].options[3];
+      document.getElementsByName(`edit-cor-idx`)[0].value = res_quiz[0].correct_index;
+
+      document.getElementById('update-que-form').style.display='block';  
+      
+    }   
+
+  </script>
+
+</body>
+</html>

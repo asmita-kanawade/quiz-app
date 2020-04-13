@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+
+    <title>Document</title>
+    <style>
+
+        body {
+        font-family: 'Montserrat', sans-serif;
+        }
+
+        input, textarea, button, select {font-family: inherit}
+            
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            /* font-family: 'Gotham Rounded', 'Franklin Gothic Medium', 'Arial Narrow', 'Arial', 'sans-serif'; */
+        }
+
+        body {
+            padding: 0;
+            margin: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: lightseagreen;
+        }
+        .loader {
+            border: 16px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 16px solid #3498db;
+            width: 120px;
+            height: 120px;
+            -webkit-animation: spin 2s linear infinite; /* Safari */
+            animation: spin 2s linear infinite;
+            }
+
+            /* Safari */
+            @-webkit-keyframes spin {
+            0% { -webkit-transform: rotate(0deg); }
+            100% { -webkit-transform: rotate(360deg); }
+            }
+
+            @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+            }
+
+        .container {
+            background-color: aliceblue;
+            padding: 10px;
+            border-radius: 12px;
+            width: 800px;
+            max-width: 80%;
+            padding: 30px;
+            box-shadow: 0 0 5px 2px black;
+            display: block;
+        }
+
+        .btn-grid {
+            display: grid;
+            grid-template-columns: repeat(2, auto);
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        #question {
+            margin: 5px 0;
+            padding-left: 10px;
+            font-size: 20px;
+        }
+
+        .btn {
+            background-color: lightblue;
+            border-radius: 5px;
+            border: 1px solid cadetblue;
+            padding: 10px;
+            font-size: 20px;
+        }
+
+        .btn-start,
+        .btn-next {
+            position: relative;
+            font-size: 1.5em;
+            font-weight: bold;
+            padding: 10px 20px;
+            margin: 20px 10px;
+        }
+        .btn.selected {
+            background-color: red;
+            color: black;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hide {
+            display: none;
+        }
+        
+        .btn .disabled:hover *{
+        pointer-events: none;
+        cursor: not-allowed;
+        opacity: 0.9;
+       
+        }
+         .btn:hover {
+            border-color: black;
+            cursor: pointer;
+        } 
+        .btn:disabled{
+            border-color: #ccc;
+            pointer-events: none;
+            cursor: not-allowed;
+        }
+
+        .btns-disabled {
+            background-color: lightcoral;
+        }
+        .drop-down{
+            margin-left: 20px;
+        }
+        #btn-start{
+            right: 17px;
+        }
+        #btn-score{
+            right: 27px;
+        }
+        #btn-luck{
+            width: 400px;
+            background-color: aliceblue;
+            border: none;
+            cursor: auto;
+        }
+   
+    </style>
+</head>
+
+<body>
+    <div class="container">
+    <label for="language" id="lbl-1" class="drop-down"><b>Choose Language</b></label>
+    <!-- <input type="text" placeholder="Select Language" name="language" required> -->            
+    <select id="quiz-language" required>
+      <option value="HTML">HTML</option>
+      <option value="CSS">CSS</option>
+      <option value="JS">JavaScript</option>
+      <option value="JAVA">Java</option>
+      <option value="PY">Python</option>
+    </select>
+
+    <label for="level" id="lbl-2" class="drop-down"><b> Choose Difficulty Level</b></label>
+    <!-- <input type="text" placeholder="Select Difficulty Level" name="level" required> -->
+    <select id="quiz-level" required>
+      <option value="BGN">Beginner</option>
+      <option value="INT">Intermediate</option>
+      <option value="EXP">Expert</option>
+    </select>
+
+        <div id="question-container" class="hide">
+            <div id="question">Question</div>
+            <div id="answer-buttons" class="btn-grid">
+                <button class="btn options">Answer A</button>
+                <button class="btn options">Answer B</button>
+                <button class="btn options">Answer C</button>
+                <button class="btn options">Answer D</button>
+            </div>
+        </div>
+        <div class="controls">
+            <button id="btn-score" class="btn-next btn hide"></button>
+            <button id="btn-start" class="btn-start btn">Start</button>
+            <button id="btn-next" class="btn-next btn hide">Next</button>
+            <p id="btn-luck" class="btn-next btn">Best of Luck...!</p>
+        </div>
+  
+
+    <script>
+
+            let shuffledQuestions;
+            let score = 0;
+            let currentQuestionIndex = 0;
+            let counter = 0;
+            let selcounter = 0;
+            let index =0;
+            let correctIdnex;
+            const questionElements = document.getElementById("question");
+            const answerElements = document.getElementById("answer-buttons");
+            const startButton = document.getElementById("btn-start");
+            const nextButton = document.getElementById("btn-next");
+            const scoreButton = document.getElementById("btn-score");
+
+            startButton.addEventListener('click', searchQuestions);
+
+            function start(){              
+                window.location.reload();
+            }
+
+            function startGame(questions) {
+                //console.log("getting data at first:" + questions);
+                
+                document.getElementById('lbl-1').classList.add("hide");
+                document.getElementById('lbl-2').classList.add("hide");
+                document.getElementById('quiz-language').classList.add("hide");
+                document.getElementById('quiz-level').classList.add("hide");
+
+
+                document.getElementById('btn-start').classList.add("hide");
+                document.getElementById('btn-next').classList.remove("hide");
+                document.getElementById('btn-luck').classList.add("hide");
+
+                shuffledQuestions = questions.sort(() => Math.random() - .5);
+                //shuffledQuestions.forEach(opt => console.log("shuff :" + opt.question));
+                document.getElementById('question-container').classList.remove("hide");
+
+                setNextQuestion(counter);
+                nextButton.addEventListener('click', () => {
+                    if (currentQuestionIndex == 0) {
+                        currentQuestionIndex++;
+                    }
+                    //console.log("by next button");
+                    setNextQuestion(counter);
+                });
+
+            }
+
+            function setNextQuestion(currentQuestionIndex) {
+                showQuestion(shuffledQuestions[currentQuestionIndex]);
+            }
+
+            function showQuestion(quiz) {
+                //console.log("show:" + counter);
+                counter++;
+               
+
+                resetState();
+                questionElements.innerText = quiz.question;
+                let i = 1;
+                correctIdnex=quiz.correct_index;
+                //console.log("correct"+correctIdnex);
+                
+                quiz.options.forEach(option => {                  
+                    const button = document.createElement('button');
+                    button.classList.add('btn');
+                    button.setAttribute("id", i);
+                    i++;
+                    button.innerHTML = option;
+                    answerElements.appendChild(button);
+                    button.addEventListener('click', selectAnswer)
+                });
+                
+            }
+
+            function resetState() {
+                document.getElementById('btn-next').classList.add('hide');
+                while (answerElements.firstChild) {
+                    answerElements.removeChild(answerElements.firstChild)
+                }
+            }
+
+            function selectAnswer(e) {
+                //console.log("select counter:" + selcounter);
+                selcounter++;
+                const first = document.getElementById("1");
+                const second = document.getElementById("2");
+                const third = document.getElementById("3");
+                const forth = document.getElementById("4");
+
+                first.setAttribute("disabled", true);
+                second.setAttribute("disabled", true);
+                third.setAttribute("disabled", true);
+                forth.setAttribute("disabled", true);
+
+                first.classList.add("disabled");
+                second.classList.add("disabled");
+                third.classList.add("disabled");
+                forth.classList.add("disabled");
+                
+                // first.classList.remove("btn");
+                // second.classList.remove("btn");
+                // third.classList.remove("btn");
+                // forth.classList.remove("btn");
+
+                //console.log("other option"+first);
+                
+
+                const selectedButton = e.target;
+
+                //console.log("id:"+selectedButton.id);
+                document.body.style.backgroundColor = "#f19292";
+
+                if(selectedButton.id == correctIdnex){
+                    score++;
+                   // console.log("score:"+score);
+                    selectedButton.style.backgroundColor="green";
+                    selectedButton.style.color="white";
+                    document.body.style.backgroundColor = "#cbe2b0";
+
+                }
+                selectedButton.classList.add("selected");
+                //console.log("length: " + shuffledQuestions.length + "cuurIn :" + currentQuestionIndex);
+
+                if (shuffledQuestions.length > counter) {
+                    nextButton.classList.remove("hide");                   
+                    nextButton.addEventListener('click', () => {
+                        currentQuestionIndex++
+                    });
+                    //nextButton.addEventListener('click', setNextQuestion(currentQuestionIndex++));
+                }
+                else {
+                    //console.log("score:" +score);
+                    scoreButton.innerText = "Your score is : "+score+" / "+shuffledQuestions.length;
+                    scoreButton.classList.remove("hide");
+                    
+                    startButton.innerText = "Restart";
+                    startButton.classList.remove("hide");
+                    startButton.addEventListener('click', start);
+                }
+
+            }
+
+
+            function searchQuestions() {
+                let conditions = {
+                    language: document.getElementById("quiz-language").value,
+                    difficulty_level: document.getElementById("quiz-level").value
+                };
+
+                fetch("/api/search-questions",{
+                        method: 'POST', // or 'PUT'
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(conditions),
+                    })
+                    .then((resp) => resp.json())
+                    .then((data) => {
+                        //console.log(`search que: ${JSON.stringify(data)}`);
+
+                        startGame(data);
+                    });
+            }
+
+
+        </script>
+</body>
+
+</html>

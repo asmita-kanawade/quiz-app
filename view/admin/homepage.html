@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+      body{
+            padding: 0;
+            margin: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: cadetblue;
+      }
+      .btn
+      {
+      color: white;
+      height: 80px;
+      width: 270px;
+      padding: 10px;
+      border: 1px solid darkcyan;
+      box-shadow: 0px 0px 7px 4px black;
+      margin: 10px;
+      font-size: 26px;
+      background-color: darkcyan;
+      }
+
+      .btn:hover{
+        cursor: pointer;
+        border: 2px solid black;
+      }
+    
+      a{
+        font-size: 24px;
+        text-decoration: none;
+      }
+
+      .container {
+            background-color: aliceblue;
+            padding: 10px;
+            border-radius: 12px;
+            width: 590px;
+            max-width: 80%;
+            padding: 30px;
+            box-shadow: 0 0 5px 2px black;
+            display: block;
+      }
+      
+
+
+    </style>
+</head>
+
+<body>
+  <div class="container">
+    <button class="btn" onclick="window.location.href = 'http://localhost:2001/admin';">Go to Admin Page</button>
+    <button class="btn" onclick="window.location.href = 'http://localhost:2001/student';">Go for a Quiz</button>
+  </div>
+</body>
+
+</html>
