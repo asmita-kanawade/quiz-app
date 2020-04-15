@@ -2,19 +2,19 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz-app</title>
     <style>
       body{
-            padding: 0;
-            margin: 0;
-            width: 100vw;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: cadetblue;
+      padding: 0;
+      margin: 0;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: cadetblue;
       }
       .btn
       {
@@ -30,35 +30,32 @@
       }
 
       .btn:hover{
-        cursor: pointer;
-        border: 2px solid black;
+      cursor: pointer;
+      border: 2px solid black;
       }
-    
+
       a{
-        font-size: 24px;
-        text-decoration: none;
+      font-size: 24px;
+      text-decoration: none;
       }
 
       .container {
-            background-color: aliceblue;
-            padding: 10px;
-            border-radius: 12px;
-            width: 590px;
-            max-width: 80%;
-            padding: 30px;
-            box-shadow: 0 0 5px 2px black;
-            display: block;
+      background-color: aliceblue;
+      padding: 10px;
+      border-radius: 12px;
+      width: 590px;
+      max-width: 80%;
+      padding: 30px;
+      box-shadow: 0 0 5px 2px black;
+      display: block;
       }
-      
-
-
-    </style>
+  </style>
 </head>
 
 <body>
   <div class="container">
-    <button class="btn" onclick="window.location.href = 'http://localhost:2001/admin';">Go to Admin Page</button>
-    <button class="btn" onclick="window.location.href = 'http://localhost:2001/student';">Go for a Quiz</button>
+    <button class="btn" onclick="location.href = 'admin';">Go to Admin Page</button>
+    <button class="btn" onclick="location.href = 'student';">Go for a Quiz</button>
   </div>
 </body>
 
