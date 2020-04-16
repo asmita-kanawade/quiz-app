@@ -37,6 +37,7 @@ app.get('/admin', function (req, res) {
     res.send(data.toString())
   })
 });
+
 //Render Student html
 app.get('/student', function (req, res) {
 
@@ -51,7 +52,7 @@ app.get('/student', function (req, res) {
 //get all Questions
 app.post('/api/search-questions', async (req, res) => {
 
-  console.log("inside app.get:/api/search-questions");
+  console.log("inside /api/search-questions");
 
   try {
     let conditions = req.body ;
@@ -59,8 +60,9 @@ app.post('/api/search-questions', async (req, res) => {
   
     let quiz = await QuizModel.find(conditions, null, { sort: {question_No: 1} });
 
-    console.log(`Questions: ${quiz}`);
+    //console.log(`Questions: ${quiz}`);
     res.send(quiz);
+
   } catch (error) {
 
     console.log(`Search Questions Error: ${error}`);
@@ -85,8 +87,13 @@ app.post('/api/admin/add-question',  async (req, res) => {
     const quizSchema = new QuizModel(question);
  
     await quizSchema.save();
- 
-    res.redirect(307, "/api/search-questions");
+    
+    //let quiz = await QuizModel.find({}, null, { sort: {question_No: 1} });
+    //console.log(`Questions: ${quiz}`);
+    //res.send(quiz);
+    //res.redirect(307, "/api/search-questions");
+
+    res.send({status:"success"});
  
   } catch (err) {
     console.log("error in post :"+ err);
@@ -116,8 +123,12 @@ app.post('/api/admin/update-question',  async (req, res) => {
         correct_index:questions.correct_index
       });
 
-     res.redirect(307, "/api/search-questions")
-   // res.send("updated..!");
+    //let quiz = await QuizModel.find({}, null, { sort: {question_No: 1} });
+    //console.log(`Questions: ${quiz}`);
+    //res.send(quiz);
+    //res.redirect(307, "/api/search-questions");
+
+    res.send({status:"success"});
      
   } catch (err) {
  
@@ -135,22 +146,25 @@ app.post(`/api/admin/delete-question`, async (req, res) => {
   console.log("inside /api/admin/delete-question");
   
   const questions = req.body;
-  //console.log(`Birthday by post: ${JSON.stringify(birthday)}`);
-
   try {
 
     await QuizModel.findByIdAndRemove(questions._id);
 
-   // res.redirect("307, /api/search-questions");
-   res.send("deleted..!");
+    //let quiz = await QuizModel.find({}, null, { sort: {question_No: 1} });
+    //console.log(`Questions: ${quiz}`);
+    //res.send(quiz);
+    //res.redirect(307, "/api/search-questions");
+
+    res.send({status:"success"});
  
   } catch (err) {
     console.log(`Delete Error: ${err}`);
-    res.redirect("/");
+    res.redirect("/admin");
   
   }
 
 });
+
 
 // --- connect to mongodb ---
 mongoose.connect(process.env.DB_CONNECT, { useNewUrlParser: true }, () => {

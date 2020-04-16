@@ -98,9 +98,9 @@
         opacity:1;
         }
          /* Extra styles for the heading Update Question */
-         .heading{
+         /* .heading{
            background-color: #4CAF50;
-         }
+         } */
 
         /* Extra styles for the cancel button */
         .cancelbtn {
@@ -187,7 +187,42 @@
 
 <body onload="searchQuestions()">
 
-  <div id="question-set"></div>
+  <div id="quiz-header"> 
+
+    <h2>Question List</h2>
+    <div>
+      <span>Language </span>
+        <select id="search-language" onchange="searchQuestions()">
+          <option value="HTML">HTML</option>
+          <option value="CSS">CSS</option>
+          <option value="JS">JavaScript</option>
+          <option value="JAVA">Java</option>
+          <option value="PY">Python</option>
+        </select>
+      
+      &nbsp;&nbsp;&nbsp;&nbsp;
+
+      <span>Difficulty Level </span>
+      <select id="search-level" onchange="searchQuestions()">
+          <option value="BGN">Beginner</option>
+          <option value="INT">Intermediate</option>
+          <option value="EXP">Expert</option>
+        </select>
+
+      &nbsp;&nbsp;&nbsp;&nbsp;
+
+      <button id="search-button" onClick="searchQuestions()">SEARCH</button>
+
+      &nbsp;&nbsp;&nbsp;&nbsp;
+
+      <button id="add-button" onClick="openAddQuestionModal()">ADD NEW QUESTION</button>
+    </div>
+        
+  </div>
+
+  <div id="question-set"> 
+
+  </div>
 
   <!-- The Add Question Modal : Starts here -->
   <div id="add-que-form" class="question-modal">
@@ -209,6 +244,8 @@
               <option value="JAVA">Java</option>
               <option value="PY">Python</option>
             </select>
+
+            &nbsp;&nbsp;&nbsp;&nbsp;
 
             <label for="level"><b>Difficulty Level</b></label>
             <!-- <input type="text" placeholder="Select Difficulty Level" name="level" required> -->
@@ -239,6 +276,7 @@
 
             <div class="clearfix">
                 <button type="button" onclick="document.getElementById('add-que-form').style.display='none'" class="cancelbtn">Cancel</button>  
+                
                 <button type="button" class="signupbtn" onclick="addNewQuestion()">Save</button>
             </div>
         </div>
@@ -257,8 +295,8 @@
             <h1 class="heading">Update Question</h1>
             <hr>
 
-            <label for="id"><b>Question ID</b></label>
-            <input type="text" placeholder="Question ID" name="edit-id" required>        
+            <label for="id" style="display: none;"><b>Question ID</b></label>
+            <input type="text" placeholder="Question ID" name="edit-id" required style="display: none;">        
 
             <label for="language"><b>Language</b></label>
             <!-- <input type="text" placeholder="Select Language" name="edit-lang" required> -->
@@ -269,7 +307,7 @@
               <option value="JAVA">Java</option>
               <option value="PY">Python</option>
             </select>
-            
+            &nbsp;&nbsp;&nbsp;&nbsp;
             <label for="level"><b>Difficulty Level</b></label>
             <!-- <input type="text" placeholder="Select Difficulty Level" name="edit-level" required>  -->
             <select name="edit-level" required>
@@ -278,6 +316,7 @@
               <option value="EXP">Expert</option>
             </select>
 
+            <p></p>
             <label for="question-number"><b>Question Number</b></label>
             <input type="text" placeholder="Enter Question No." name="edit-que-no" required>
 
@@ -391,29 +430,7 @@
 
     /**----function for displaying questions---**/
     function displayQuiz(data) {
-      let output = `
-        <h2>Question List</h2>
-        <div>
-          <span>Language </span>
-            <select id="search-language" >
-              <option value="HTML">HTML</option>
-              <option value="CSS">CSS</option>
-              <option value="JS">JavaScript</option>
-              <option value="JAVA">Java</option>
-              <option value="PY">Python</option>
-            </select>
-
-          <span>Difficulty Level </span>
-          <select id="search-level">
-              <option value="BGN">Beginner</option>
-              <option value="INT">Intermediate</option>
-              <option value="EXP">Expert</option>
-            </select>
-
-          <button id="search-button" onClick="searchQuestions()">SEARCH</button>
-          <button id="add-button" onClick="openAddQuestionModal()">ADD NEW QUESTION</button>
-        </div>
-        `;
+      let output = ``;
 
       data.forEach(function (quiz) {
         let id = quiz._id;
@@ -435,9 +452,10 @@
         output += `
                   <hr style="border: 1px solid white;">
                   <p>Correct Option Index: ${quiz.correct_index}</p>
-
+                 
                   <button class="edit-button" id=${id} onClick="openUpdateModal(this)">EDIT</button>
-                  <button id="delete-question-button" onclick="doThis()">DELETE</button>
+                  &nbsp;&nbsp;&nbsp;&nbsp;
+                  <button id=${id} onclick="deleteQuestion(this)">DELETE</button>
 
                 </div>`
       });
@@ -482,9 +500,10 @@
         })
         .then((response) => response.json())
         .then((data) => {
+            searchQuestions();
             //console.log('Success:', data);
-            globalQuizData = [...data];
-            displayQuiz(data);
+            //globalQuizData = [...data];
+            //displayQuiz(data);
             document.getElementById('add-que-form').style.display='none';           
         })
         .catch((error) => {
@@ -533,10 +552,11 @@
             })
             .then((response) => response.json())
             .then((data) => {
-                //console.log(`Update Response: ${JSON.stringify(data)}`);
-              
-                globalQuizData = [...data];
-                displayQuiz(data);
+                  searchQuestions();
+                //console.log('Success:', data);
+                //globalQuizData = [...data];
+                //displayQuiz(data);
+
                 document.getElementById('update-que-form').style.display='none';           
             })
             .catch((error) => {
@@ -570,6 +590,34 @@
       document.getElementById('update-que-form').style.display='block';  
       
     }   
+
+
+    function deleteQuestion(delButton){      
+      const que_id = delButton.id;
+      const question = {"_id":que_id}
+
+      var r = confirm("Do you really want to delete this question?");
+      if (r == true) {
+        console.log(`Choice: ${r}`);
+
+        fetch("/api/admin/delete-question",{
+            method: 'POST', // or 'PUT'
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(question),
+        })
+        .then((resp) => resp.json())
+        .then((data) => {
+              searchQuestions();
+              //console.log('Success:', data);
+              //globalQuizData = [...data];
+              //displayQuiz(data);
+        });
+        
+      }
+            
+    }
 
   </script>
 
